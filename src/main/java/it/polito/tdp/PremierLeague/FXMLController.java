@@ -47,16 +47,48 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	Match m = cmbMatch.getValue();
+    	if (m == null){
+    		txtResult.setText("Seleziona un match!");
+    		return;
+    	} 
     	
+    	this.model.creaGrafo(m);
+    	
+    	txtResult.appendText("GRAFO CREATO\n");
+    	txtResult.appendText("# VERTICI: " + this.model.nVertici() + "\n");
+    	txtResult.appendText("# ARCHI: " + this.model.nArchi() + "\n");
     }
 
     @FXML
-    void doGiocatoreMigliore(ActionEvent event) {    	
+    void doGiocatoreMigliore(ActionEvent event) {
+    	
+    	txtResult.clear();
+    	
+    	if (this.model.getGrafo() == null) {
+    		txtResult.appendText("Crea prima il grafo!");
+    		return;
+    	}
+    	
+    	txtResult.appendText("Giocatore migliore: " + this.model.getMigliore().toString());
     	
     }
     
     @FXML
     void doSimula(ActionEvent event) {
+    	
+    	String input = txtN.getText();
+    	try {
+    		int nAzioni = Integer.parseInt(input);	
+    		Match partita = this.cmbMatch.getValue();
+    		
+    		txtResult.setText(model.simula(nAzioni,partita));
+
+    		} catch (NumberFormatException e) {
+    			txtResult.appendText("Errore: il valore inserito non è un intero\n");
+    			return;
+    		}
+
 
     }
 
@@ -73,5 +105,6 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.cmbMatch.getItems().addAll(model.getTuttiMatch());
     }
 }
